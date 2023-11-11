@@ -1,0 +1,87 @@
+<html>
+<head>
+</head>
+<body>
+<center>
+<h1> 한송휘 친구 이름 불러주기</h1>
+<input type="button" id="tajaStart" value="종료">
+<input type="checkbox" id="sori">소리끄기<br>
+<input type="button" value="점수">
+<input type="text" id="tajaPoints" size=7><br>
+<progress id="rTime" value=100 max=100></progress><br>
+<input type="text" id="target" size=8>
+<label id="alias">친구</label><br>
+<input type="text" id="inputTyping" size=18><br>
+</center>
+<script>
+points = 0;
+gameEnd = false;
+dtid = null;
+jsName = ["민수현", "박지윤", "연준희", "전해진", "임가연",
+   "김선민", "한소혜", "조재민", "엄종업선생님", "박다연", "빼뻬로",
+   "백지원", "최다연", "김나영", "친구없어요", "마라탕", "경우의수"]
+jsAlias = ["민두목~", "구라지윤~", "김태래~", "전애진~", "임이밍~",
+   "꾀꼬리~", "띨띨이~", "잼민이~", "", "귀여워용!!", "만들어야징!!",
+   "말랐엉", "기요밍", "귀여웡", "슬프다", "맛있엉!!", "너무싫어요................."] 
+   function setNewWord() {
+  if ( gameEnd )
+   return
+  var k = Math.floor(Math.random()*jsName.length)
+  target.value = jsName[k]
+  var k = Math.floor(Math.random()*jsAlias.length)
+  document.querySelector("#alias").innerHTML = jsAlias[k]
+  rTime.value = 100
+  dtid = setTimeout(decreaseTime, 1000)
+}
+
+function decreaseTime() {
+  rTime.value -= 10
+  if ( rTime.value == 0 ) {
+    setNewWord()
+  }
+  else
+    dtid = setTimeout(decreaseTime, 1000)
+}
+
+function wordCheck(evt) {
+  if ( evt.keyCode == 13 ) {
+    if ( target.value == inputTyping.value.toLowerCase() ) {
+      points += rTime.value;
+      tajaPoints.value = points
+      playAudio()
+    }
+    clearTimeout(dtid)
+    inputTyping.value = ""
+    setNewWord()
+  }
+}
+
+function gameStop() {
+  gameEnd = true;
+  target.value = ""
+  inputTyping.value = ""
+  rTime.value = 0
+}
+
+var audio = new Audio("katalk.mp3")
+function playAudio() {
+  if ( eval("sori").checked )
+    return
+  audio.play()
+}
+
+function init() {
+  points = 0
+  gameEnd = false;
+  tajaPoints.value = 0
+  tajaStart.onclick = gameStop
+  inputTyping.onkeypress = wordCheck
+  setNewWord()
+  inputTyping.focus()
+}
+//시작
+init()
+
+</script>
+</body>
+</html>
